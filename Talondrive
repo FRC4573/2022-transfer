@@ -1,0 +1,106 @@
+package frc.robot;
+
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
+
+import com.kauailabs.navx.frc.AHRS;
+//import edu.wpi.first.wpilibj.SpeedControllerGroup;
+//import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+//import edu.wpi.first.wpilibj.Spark;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class DriveTalon extends SubsystemBase{
+    private AHRS gyro = new AHRS(SPI.Port.kMXP);
+    private DifferentialDriveOdometry m_Odometry;
+    private WPI_VictorSPX m_frontRight = new WPI_VictorSPX(1);
+    private WPI_VictorSPX m_frontLeft = new WPI_VictorSPX(2);
+    private WPI_VictorSPX m_rearRight = new WPI_VictorSPX(3);
+    private WPI_VictorSPX m_rearLeft = new WPI_VictorSPX(4);
+    private Encoder left_encoder = new Encoder(0,1);
+    //private Encoder right_encoder = new Encoder(4,5);
+
+    private MotorControllerGroup m_left = new MotorControllerGroup(m_frontLeft, m_rearLeft);
+    private MotorControllerGroup m_right = new MotorControllerGroup(m_frontRight, m_rearRight);
+
+    private DifferentialDrive m_drive = new DifferentialDrive(this.m_left, this.m_right);
+
+  public DriveTalon(){
+    m_drive.setExpiration(0.50);
+    m_drive.arcadeDrive(0, 0, true);
+    m_right.setInverted(true);
+    m_drive.setSafetyEnabled(false);
+    left_encoder.reset();
+    //right_encoder.reset();
+    m_Odometry = new DifferentialDriveOdometry(gyro.getRotation2d());
+  }
+
+public DifferentialDrive getDriveTrain(){
+  return this.m_drive;
+}
+
+  public MotorControllerGroup getLeftSpeedController(){
+    return this.m_left;
+  }
+  public AHRS getGyro(){
+    return this.gyro;
+  }
+
+  public MotorControllerGroup getRightSpeedController(){
+    return this.m_right;
+  }
+  public Pose2d getPose() {
+    return m_Odometry.getPoseMeters();
+  }
+  /*
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(left_encoder.getRate(), right_encoder.getRate());
+  }
+  */
+  public void resetOdometry(Pose2d pose) {
+    left_encoder.reset();
+    //right_encoder.reset();
+    m_Odometry.resetPosition(pose, gyro.getRotation2d());
+  }
+  public void resetEncoders() {
+    left_encoder.reset();
+    //right_encoder.reset();
+  }
+  public void zeroHeading() {
+    gyro.reset();
+  }
+  public double getHeading() {
+    return gyro.getRotation2d().getDegrees();
+  }
+  public double getTurnRate() {
+    return -gyro.getRate();
+  }
+  /*
+  public double getAverageEncoderDistance() {
+    return (left_encoder.getDistance() + right_encoder.getDistance()) / 2.0;
+  }
+  */
+public DifferentialDriveOdometry getOdometer(){
+  return this.m_Odometry;
+}
+public Encoder getLeftEncoder(){
+  return this.left_encoder;
+}
+/*
+public Encoder getRightEncoder(){
+  return this.right_encoder;
+}
+*/
+public void tankDriveVolts(double leftVolts, double rightVolts) {
+  m_left.setVoltage(leftVolts);
+  m_right.setVoltage(rightVolts);
+  m_drive.feed();
+}
+}
