@@ -1,0 +1,120 @@
+package frc.robot;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+
+public class Shooter {
+    //Nada
+    //private CANSparkMax motor1 = new CANSparkMax(5, MotorType.kBrushless);
+    //Small Motor
+    private CANSparkMax motor2 = new CANSparkMax(6, MotorType.kBrushed);
+    //Big motor
+    private CANSparkMax motor3 = new CANSparkMax(8, MotorType.kBrushless);
+    //Elbow
+    private CANSparkMax motor4 = new CANSparkMax(7, MotorType.kBrushless);
+    //intake
+    private CANSparkMax motor5 = new CANSparkMax(9, MotorType.kBrushless);
+    //Shooter
+    private CANSparkMax motor6 = new CANSparkMax(10,MotorType.kBrushless);
+    private RelativeEncoder elbowEncoder = motor4.getEncoder();
+
+    //Speed settings
+    double smallMotorspeed = 0.9;
+    double bigMotorSpeed = 0.5;
+    double elbowSpeed = 0.4;
+    double intakeSpeed = 0.9;
+    double shooterSpeed = 1;
+
+    //Get Motor Functions
+    /*public CANSparkMax getMotor1(){
+        return this.motor1;
+    }*/
+    public double getPosition(){
+        return this.elbowEncoder.getPosition();
+    }
+    public CANSparkMax getMotor2(){
+        return this.motor2;
+    }
+    public CANSparkMax getMotor3(){
+        return this.motor3;
+    }
+    public CANSparkMax getMotor4(){
+        return this.motor4;
+    }
+    public CANSparkMax getMotor5(){
+        return this.motor5;
+    }
+    public CANSparkMax getMotor6(){
+        return this.motor6;
+    }   
+
+    //Forward Motor Functions
+    /*public void setMotor1Forward(){
+        this.motor1.set(1);
+    }*/
+    public void setMotor2Forward(){
+        this.motor2.set(smallMotorspeed);
+    }
+    public void setMotor3Forward(){
+        this.motor3.set(bigMotorSpeed);
+    }
+    public void setMotor4Forward(){
+        this.motor4.set(elbowSpeed);
+    }
+    public void setMotor5Forward(){
+        this.motor5.set(intakeSpeed);
+    }
+    public void setMotor6Forward(){
+        this.motor6.set(shooterSpeed);
+    }
+
+    //Reverse Functions
+    /*public void setMotorReverse1(){
+        this.motor1.set(-1);
+    }*/
+    public void setMotorReverse2(){
+        this.motor2.set(-smallMotorspeed);
+    }   
+    public void setMotorReverse3(){
+        this.motor3.set(-bigMotorSpeed);
+    }
+    public void setMotorReverse4(){
+        this.motor4.set(-elbowSpeed);
+    }
+    public void setMotorReverse5(){
+       this.motor5.set(-intakeSpeed);
+    }
+    public void setMotorReverse6(){
+        this.motor6.set(-shooterSpeed);
+    }
+
+    public void autoShooter(){
+        this.motor6.set(-0.75);
+    }
+    public void autoIntake(){
+        this.motor5.set(-0.75);
+    }
+
+    //Stopping Functions
+    /*public void setMotorStop1(){
+        this.motor1.set(0.0);
+    }*/
+    public void setMotorStop2(){
+        this.motor2.set(0.0);
+    }
+    public void setMotorStop3(){
+        this.motor3.set(0.0);
+    }
+    public void setMotorStop4(){
+        this.motor4.set(0.0);
+    }
+    public void setMotorStop5(){
+        this.motor5.set(0.0);
+    }
+    public void setMotorStop6(){
+        this.motor6.set(0.0);
+    }
+}
